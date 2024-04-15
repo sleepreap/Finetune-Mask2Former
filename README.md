@@ -10,7 +10,7 @@ Run our demo using Colab: [![Open In Colab](https://colab.research.google.com/as
 ## Purpose
 The purpose of this document is to build a process of finetuning Mask2Former for custom dataset on semantic segmentation. The code is done using Pytorch Lightning and the model can be imported from hugging face.
 
-1. Create a virtual environment: `conda create -n segformer python=3.10 -y` and `conda activate Mask2Former `
+1. Create a virtual environment: `conda create -n Mask2Former python=3.10 -y` and `conda activate Mask2Former `
 2. Install [Pytorch CUDA 11.8](https://pytorch.org/): ` pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
 3. Download code: `https://github.com/sleepreap/Finetune-Mask2former.git`
 4. `cd Finetuning-Mask2former` and run `pip install -e .`
