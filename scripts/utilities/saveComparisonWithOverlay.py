@@ -5,9 +5,9 @@ torch.set_float32_matmul_precision("medium")
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from segformer.model import SegformerFinetuner
-from segformer.dataset import SegmentationDataModule
-import segformer.config as config
+from mask2former.model import Mask2FormerFinetuner
+from mask2former.dataset import SegmentationDataModule
+import mask2former.config as config
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
@@ -97,7 +97,7 @@ if __name__=="__main__":
         os.makedirs(save_path)
         
     data_module = SegmentationDataModule(dataset_dir=config.DATASET_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
-    model = SegformerFinetuner.load_from_checkpoint(model_path,id2label=config.ID2LABEL, lr=config.LEARNING_RATE)
+    model = Mask2FormerFinetuner.load_from_checkpoint(model_path,id2label=config.ID2LABEL, lr=config.LEARNING_RATE)
     
     model.eval()
     data_module.setup(stage='test')
