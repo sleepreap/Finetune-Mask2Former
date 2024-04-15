@@ -1,6 +1,7 @@
 import pytorch_lightning as pl
 import torch
 from transformers import Mask2FormerForUniversalSegmentation
+from transformers import AutoImageProcessor
 from torch import nn
 import evaluate
 import time
@@ -21,6 +22,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             label2id=self.label2id,
             ignore_mismatched_sizes=True,
         )
+        self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
         evaluate.load
         self.train_mean_iou = evaluate.load("mean_iou")
         self.val_mean_iou = evaluate.load("mean_iou")
@@ -55,6 +57,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
         loss = outputs.loss
         self.log("loss", loss)
         return loss
+        
     def test_step(self, batch, batch_idx):
         outputs = self(
             pixel_values=batch["pixel_values"],
@@ -66,7 +69,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
         ground_truth = batch["original_segmentation_maps"]
         target_sizes = [(image.shape[1], image.shape[2]) for image in original_images]
         # predict segmentation maps
-        predicted_segmentation_maps = processor.post_process_semantic_segmentation(outputs,target_sizes=target_sizes)
+        predicted_segmentation_maps = self.processor.post_process_semantic_segmentation(outputs,target_sizes=target_sizes)
         # Optionally log loss here
         metrics = self.train_mean_iou._compute(
             predictions=predicted_segmentation_maps[0].cpu().numpy(),
@@ -88,7 +91,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             **{f"iou_{self.id2label[i]}": v for i, v in enumerate(per_category_iou)}
         }
         for k,v in metrics.items():
-            self.log(k,v,sync_dist=True,batch_size=batch_size)
+            self.log(k,v,sync_dist=True)
         return(metrics)
         
     def configure_optimizers(self):
