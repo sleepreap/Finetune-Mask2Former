@@ -13,7 +13,7 @@ The purpose of this document is to build a process of finetuning Mask2Former for
 1. Create a virtual environment: `conda create -n segformer python=3.10 -y` and `conda activate Mask2Former `
 2. Install [Pytorch CUDA 11.8](https://pytorch.org/): ` pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
 3. Download code: `https://github.com/sleepreap/Finetune-Mask2former.git`
-4. `cd Finetuning-SegFormer` and run `pip install -e .`
+4. `cd Finetuning-Mask2former` and run `pip install -e .`
 
 ## Dataset
 Use createDataset.py to create the folders.
