@@ -9,6 +9,7 @@ setup(name='segformer',
           "lightning",
           "tqdm",
           "matplotlib",
-          "opencv-python"
+          "opencv-python",
+          "scipy"
       ],
       )
