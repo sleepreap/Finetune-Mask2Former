@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 import numpy as np
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader 
-from transformers import SegformerImageProcessor
+from transformers import AutoImageProcessor
 
 class ImageSegmentationDataset(Dataset):
     def __init__(self, images_dir, masks_dir, transform=None):
@@ -35,7 +35,7 @@ class SegmentationDataModule(pl.LightningDataModule):
         self.dataset_dir = dataset_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.processor = SegformerImageProcessor()
+        self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
     
     def setup(self, stage=None):
         if stage == 'fit' or stage is None:
@@ -69,4 +69,7 @@ class SegmentationDataModule(pl.LightningDataModule):
           size=(640,640),
           return_tensors="pt",
       )
+      batch["original_images"] = images
+      batch["original_segmentation_maps"] = segmentation_maps
+
       return batch
