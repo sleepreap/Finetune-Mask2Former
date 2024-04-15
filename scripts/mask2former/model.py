@@ -9,9 +9,10 @@ import numpy as np
 
 class Mask2FormerFinetuner(pl.LightningModule):
 
-    def __init__(self, id2label):
+    def __init__(self, id2label, lr ):
         super(Mask2FormerFinetuner, self).__init__()
         self.id2label = id2label
+        self.lr = lr
         self.num_classes = len(id2label.keys())
         self.label2id = {v:k for k,v in self.id2label.items()}
         self.model = Mask2FormerForUniversalSegmentation.from_pretrained(
@@ -91,4 +92,4 @@ class Mask2FormerFinetuner(pl.LightningModule):
         return(metrics)
         
     def configure_optimizers(self):
-        return torch.optim.Adam([p for p in self.parameters() if p.requires_grad], lr=0.0001)
+        return torch.optim.Adam([p for p in self.parameters() if p.requires_grad], self.lr)
