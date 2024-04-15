@@ -12,8 +12,8 @@ The purpose of this document is to build a process of finetuning Mask2Former for
 
 1. Create a virtual environment: `conda create -n Mask2Former python=3.10 -y` and `conda activate Mask2Former `
 2. Install [Pytorch CUDA 11.8](https://pytorch.org/): ` pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
-3. Download code: `https://github.com/sleepreap/Finetune-Mask2former.git`
-4. `cd Finetuning-Mask2former` and run `pip install -e .`
+3. Download code: `git clone https://github.com/sleepreap/Finetune-Mask2former.git`
+4. `cd Finetuning-Mask2Former` and run `pip install -e .`
 
 ## Dataset
 Use createDataset.py to create the folders.
@@ -24,7 +24,7 @@ Refer to the README file in the folder "Data" on where to upload the images and 
 2. set up the configs required in config.py
 3. run the train.py file
 
-A CSVlogger and the trained model file will be saved after the training has been completed. The model file would be saved as "Mask2Former_checkpoint_hyperparameters.ckpt" in the same directory. An "output" folder will be created to store the contents of the CSVlogger.
+A CSVlogger and the trained model file will be saved after the training has been completed. The model file would be saved as "Mask2Former.ckpt" in the same directory. An "output" folder will be created to store the contents of the CSVlogger.
 
 ## Testing
 The testing is done using Mean-IOU, as well as pixel accuracy from the evaluate package. It will provide individual accuracy and IOU scores for each class label specified, as well as the mean accuracy and IOU scores of all the class labels. To run the test file, the model path of the trained model must be provided as an argument.
@@ -33,7 +33,7 @@ The testing is done using Mean-IOU, as well as pixel accuracy from the evaluate 
 2. run the test.py file using this command: python test.py --model_path MODEL_PATH
    
 ```bash
-e.g python test.py --model_path Mask2Former_checkpoint_hyperparameters.ckpt
+e.g python test.py --model_path Mask2Former.ckpt
 ```
 
 ## Utilities
