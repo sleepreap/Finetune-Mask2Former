@@ -3,6 +3,7 @@ import torch
 from transformers import Mask2FormerForUniversalSegmentation
 from transformers import AutoImageProcessor
 from torch import nn
+import mask2former.config as config
 import evaluate
 import time
 import json 
@@ -107,7 +108,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             **{f"iou_{self.id2label[i]}": v for i, v in enumerate(per_category_iou)}
         }
         for k,v in metrics.items():
-            self.log(k,v,sync_dist=True)
+            self.log(k,v,sync_dist=True, batch_size=config.BATCH_SIZE)
         return(metrics)
         
     def configure_optimizers(self):
