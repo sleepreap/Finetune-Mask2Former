@@ -45,7 +45,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             class_labels=batch["class_labels"],
         )
         loss = outputs.loss
-        self.log("loss", loss ,sync_dist=True)
+        self.log("loss", loss, sync_dist=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -55,7 +55,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             class_labels=[labels for labels in batch["class_labels"]],
         )
         loss = outputs.loss
-        self.log("loss", loss ,sync_dist=True)
+        self.log("loss", loss, sync_dist=True)
         return loss
         
     def test_step(self, batch, batch_idx):
@@ -69,10 +69,24 @@ class Mask2FormerFinetuner(pl.LightningModule):
         ground_truth = batch["original_segmentation_maps"]
         target_sizes = [(image.shape[1], image.shape[2]) for image in original_images]
         # predict segmentation maps
-        predicted_segmentation_maps = self.processor.post_process_semantic_segmentation(outputs,target_sizes=target_sizes)
+        predicted_segmentation_maps =self.processor.post_process_semantic_segmentation(outputs,target_sizes=target_sizes)
+        
+        predictions=predicted_segmentation_maps[0].cpu().numpy()
+        
+        # Calculate FN and FP
+        false_negatives = np.sum((predictions == 0) & (ground_truth[0] == 1))
+        false_positives = np.sum((predictions == 1) & (ground_truth[0] == 0))
+        
+        # Total number of instances
+        total_instances = np.prod(predictions.shape)
+        
+        # Calculate percentages
+        percentage_fn = (false_negatives / total_instances) 
+        percentage_fp = (false_positives / total_instances) 
+        
         # Optionally log loss here
         metrics = self.train_mean_iou._compute(
-            predictions=predicted_segmentation_maps[0].cpu().numpy(),
+            predictions=predictions,
             references=ground_truth[0],
             num_labels=self.num_classes,
             ignore_index=254,
@@ -87,6 +101,8 @@ class Mask2FormerFinetuner(pl.LightningModule):
             'loss': loss, 
             "mean_iou": metrics["mean_iou"], 
             "mean_accuracy": metrics["mean_accuracy"],
+            "False Negative": percentage_fn,
+            "False Positive": percentage_fp,
             **{f"accuracy_{self.id2label[i]}": v for i, v in enumerate(per_category_accuracy)},
             **{f"iou_{self.id2label[i]}": v for i, v in enumerate(per_category_iou)}
         }
