@@ -35,7 +35,6 @@ def dataset_predictions(dataloader):
             pred_set.append(pred.cpu().numpy())
         for label in original_lables:
             label_set.append(label)
-    print(len(label_set))
     return pred_set, label_set
         
 
