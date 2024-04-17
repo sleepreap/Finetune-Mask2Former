@@ -6,7 +6,7 @@ import os
 
 #Training hyperparmeters
 LEARNING_RATE=0.0001
-EPOCHS=1
+EPOCHS=30
 PRECISION="16-mixed"
 DEVICES=[1,2,3]
 EARLY_STOPPING_CALLBACK = EarlyStopping(
