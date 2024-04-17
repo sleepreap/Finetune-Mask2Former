@@ -8,6 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from mask2former.model import Mask2FormerFinetuner
 from mask2former.dataset import SegmentationDataModule
 import mask2former.config as config
+from transformers import AutoImageProcessor
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,60 +20,45 @@ from colorPalette import apply_palette
 def dataset_predictions(dataloader):
     pred_set=[]
     label_set=[]
-    for batch in tqdm((dataloader), desc="Doing predictions"):
-        images, labels = batch['pixel_values'], batch['labels']
-        outputs = model(images, labels)
-        loss, logits = outputs[0], outputs[1]
-        upsampled_logits = nn.functional.interpolate(
-            logits,
-            #size of original image is 640x640
-            size=labels.shape[-2:],
-            mode="bilinear",
-            align_corners=False
-        )
-        predicted_mask = upsampled_logits.argmax(dim=1).numpy()
-        labels = labels.numpy()
-        pred_set.append(predicted_mask)
-        label_set.append(labels)        
+    prog_bar = tqdm(dataloader, desc="Doing predictions", total=len(dataloader))
+    for data in prog_bar:
+        original_images = data["original_images"]
+        original_lables=data['original_segmentation_maps']
+        target_sizes = [(image.shape[1], image.shape[2]) for image in original_images]
+        pixel_values = data['pixel_values'].to(device)
+        mask_labels = [mask_label.to(device) for mask_label in data['mask_labels']]
+        class_labels = [class_label.to(device) for class_label in data['class_labels']]
+        outputs = model(pixel_values=pixel_values, mask_labels=mask_labels, class_labels=class_labels)
+        pred_maps = processor.post_process_semantic_segmentation(outputs, target_sizes=target_sizes)
+        
+        for pred in pred_maps:
+            pred_set.append(pred.cpu().numpy())
+        for label in original_lables:
+            label_set.append(label)
     return pred_set, label_set
 
 def savePredictions(pred_set, label_set, save_path):
     palette = color_palette()
     for i in tqdm(range(len(pred_set)), desc="Saving predictions"):
         file_name = f"result_{i}"
-        n_plots = len(pred_set[i])  # Number of items per batch
-        # Dynamically adjust subplot layout based on batch size
-        f, axarr = plt.subplots(n_plots, 2, figsize=(15, 15 * n_plots))  # Ensure each subplot has enough space
-        f.subplots_adjust(hspace=0.5)  # Adjust horizontal space if needed
-
-        if n_plots > 1:
-            for j in range(n_plots):
-                image = pred_set[i][j, :]
-                label = label_set[i][j, :]
-                colored_image = apply_palette(image, palette)
-                colored_label = apply_palette(label, palette)
-                axarr[j, 0].imshow(colored_image)
-                axarr[j, 1].imshow(colored_label)
-                if j == 0:
-                    axarr[j, 0].set_title("Predictions", {'fontsize': 30})
-                    axarr[j, 1].set_title("Ground Truth", {'fontsize': 30})
-        else:
-            # For single plot adjust for non-indexed axarr
-            image = pred_set[i][0, :]
-            label = label_set[i][0, :]
-            colored_image = apply_palette(image, palette)
-            colored_label = apply_palette(label, palette)
-            axarr[0].imshow(colored_image)
-            axarr[1].imshow(colored_label)
-            axarr[0].set_title("Predictions", {'fontsize': 30})
-            axarr[1].set_title("Ground Truth", {'fontsize': 30})
-
+        pred = pred_set[i]
+        label = label_set[i]
+        colored_image = apply_palette(pred, palette)
+        colored_label = apply_palette(label, palette)
+        f, axs = plt.subplots(1, 2)
+        f.set_figheight(30)
+        f.set_figwidth(50)
+        axs[0].set_title("Prediction", {'fontsize': 40})
+        axs[0].imshow(colored_image)
+        axs[1].set_title("Ground truth", {'fontsize': 40})
+        axs[1].imshow(colored_label)
         # Save the figure
         file_path = os.path.join(save_path, f"{file_name}.png")
         plt.savefig(file_path, bbox_inches='tight')
         plt.close(f)
 
     print("Predictions saved")
+
 
 if __name__=="__main__":
     data_module = SegmentationDataModule(dataset_dir=config.DATASET_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
@@ -99,11 +85,12 @@ if __name__=="__main__":
         
     data_module = SegmentationDataModule(dataset_dir=config.DATASET_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
     model = Mask2FormerFinetuner.load_from_checkpoint(model_path,id2label=config.ID2LABEL, lr=config.LEARNING_RATE)
-    
+    processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
     model.eval()
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model.to(device)
     data_module.setup(stage='test')
     test_dataloader = data_module.test_dataloader()
     pred_set, label_set= dataset_predictions(test_dataloader)
     savePredictions(pred_set, label_set, save_path)
-        
     
