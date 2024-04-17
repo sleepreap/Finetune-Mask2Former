@@ -54,26 +54,19 @@ Inference.py would save all the predictions by the model on the test dataset in 
 2. run the inference.py file using this command: python inference.py --model_path MODEL_PATH --save_path SAVE_PATH
 ```
 
-saveComparison.py would save a plot of the prediction and the ground truth side by side in the specified save path folder. The number of subplots is based on batch_size defined in the config file. 
-
-
+saveComparison.py would save a plot of the prediction and the ground truth side by side in the specified save path folder. There is only 1 comparison per image due to memory constraint.
 
 ```bash
 1. 'cd scripts/utilities'
 2. run the saveComparison.py file using this command: python saveComparison.py --model_path MODEL_PATH --save_path SAVE_PATH
 ```
-
 predictionOverlay.py would save the overlay that shows the TP+TN+FP+FN of the predictions done by the model for all the images in the specified save path folder. Black means TN (background), Green means TP (metal-line), Red means FN (metal-line as background), Blue means FP (background as metal-line).
-
-
-
 
 ```bash
 1. 'cd scripts/utilities'
 2. run the predictionOverlay.py file using this command: python predictionOverlay.py --model_path MODEL_PATH --save_path SAVE_PATH
 ```
-
-saveComparisonWithOverlay.py would save a plot of the overlay and the ground truth side by side in the specified save path folder. The number of subplots is based on batch_size defined in the config file.
+saveComparisonWithOverlay.py would save a plot of the overlay and the ground truth side by side in the specified save path folder. There is only 1 comparison per image due to memory constraint.
 
 ```bash
 1. 'cd scripts/utilities'
