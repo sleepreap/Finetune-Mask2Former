@@ -5,17 +5,22 @@ torch.set_float32_matmul_precision("medium")
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from mask2former.model import Mask2FormerFinetuner
-from mask2former.dataset import SegmentationDataModule
-import mask2former.config as config
+from mask2former import ( Mask2FormerFinetuner, 
+                        SegmentationDataModule, 
+                        DATASET_DIR, 
+                        BATCH_SIZE, 
+                        NUM_WORKERS, 
+                        ID2LABEL, 
+                        LEARNING_RATE, 
+                        LOGGER, 
+                        PRECISION)
 from transformers import AutoImageProcessor
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 from tqdm import tqdm
-from colorPalette import color_palette
-from colorPalette import apply_palette
+from colorPalette import color_palette,  apply_palette
 
 def dataset_predictions(dataloader):
     pred_set = []
@@ -51,7 +56,6 @@ def savePredictions(pred_set, save_path):
 
 
 if __name__=="__main__":
-    data_module = SegmentationDataModule(dataset_dir=config.DATASET_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
     parser = argparse.ArgumentParser()
     parser.add_argument(
     '--model_path',
@@ -73,8 +77,8 @@ if __name__=="__main__":
     if not os.path.exists(save_path):
         os.makedirs(save_path)
         
-    data_module = SegmentationDataModule(dataset_dir=config.DATASET_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
-    model = Mask2FormerFinetuner.load_from_checkpoint(model_path,id2label=config.ID2LABEL, lr=config.LEARNING_RATE)
+    data_module = SegmentationDataModule(dataset_dir=DATASET_DIR, batch_size=BATCH_SIZE, num_workers=.NUM_WORKERS)
+    model = Mask2FormerFinetuner.load_from_checkpoint(model_path,id2label=ID2LABEL, lr=LEARNING_RATE)
     processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
     model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
