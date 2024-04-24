@@ -11,9 +11,7 @@ from mask2former import ( Mask2FormerFinetuner,
                         BATCH_SIZE, 
                         NUM_WORKERS, 
                         ID2LABEL, 
-                        LEARNING_RATE, 
-                        LOGGER, 
-                        PRECISION)
+                        LEARNING_RATE)
 from transformers import AutoImageProcessor
 from torch import nn
 import numpy as np
