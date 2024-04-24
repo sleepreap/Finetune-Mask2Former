@@ -38,6 +38,15 @@ class Mask2FormerFinetuner(pl.LightningModule):
         batch['mask_labels'] = [label.to(device) for label in batch['mask_labels']]
         batch['class_labels'] = [label.to(device) for label in batch['class_labels']]
         return batch
+        
+    def on_train_start(self):
+        self.start_time = time.time()
+
+    def on_train_end(self):
+        total_time = time.time() - self.start_time
+        metrics = {'final_epoch': self.current_epoch, 'training_time': total_time}
+        with open('mask2former_hyperparameters.json', 'w') as f:
+            json.dump(metrics, f)
 
     def training_step(self, batch, batch_idx):
         outputs = self(
