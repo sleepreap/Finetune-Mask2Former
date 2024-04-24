@@ -95,7 +95,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
         percentage_fp = (false_positives / total_instances) 
         
         # Optionally log loss here
-        metrics = self.train_mean_iou._compute(
+        metrics = self.test_mean_iou._compute(
             predictions=predictions,
             references=ground_truth[0],
             num_labels=self.num_classes,
