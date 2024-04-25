@@ -25,8 +25,6 @@ class Mask2FormerFinetuner(pl.LightningModule):
         )
         self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
         evaluate.load
-        self.train_mean_iou = evaluate.load("mean_iou")
-        self.val_mean_iou = evaluate.load("mean_iou")
         self.test_mean_iou = evaluate.load("mean_iou")
         
     def forward(self, pixel_values, mask_labels=None, class_labels=None):
