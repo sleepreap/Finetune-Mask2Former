@@ -121,4 +121,4 @@ class Mask2FormerFinetuner(pl.LightningModule):
         return(metrics)
         
     def configure_optimizers(self):
-        return torch.optim.Adam([p for p in self.parameters() if p.requires_grad], self.lr)
+        return torch.optim.AdamW([p for p in self.parameters() if p.requires_grad], self.lr)
