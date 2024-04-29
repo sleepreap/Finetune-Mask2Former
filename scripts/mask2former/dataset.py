@@ -35,7 +35,7 @@ class SegmentationDataModule(pl.LightningDataModule):
         self.dataset_dir = dataset_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
+        self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-base-ade-semantic")
     
     def setup(self, stage=None):
         if stage == 'fit' or stage is None:
