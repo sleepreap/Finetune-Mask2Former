@@ -10,14 +10,14 @@ EPOCHS=30
 PRECISION="16-mixed"
 DEVICES=[1,2,3]
 EARLY_STOPPING_CALLBACK = EarlyStopping(
-    monitor="loss",
+    monitor="valLoss",
     min_delta=0.00,
     patience=4,
     verbose=True,
     mode="min",
 )
 CHECKPOINT_CALLBACK = ModelCheckpoint(save_top_k=1, 
-                                      monitor="loss", 
+                                      monitor="valLoss", 
                                       every_n_epochs=1,  # Save the model at every epoch 
                                       save_on_train_epoch_end=True  # Ensure saving happens at the end of a training epoch
                                      )
