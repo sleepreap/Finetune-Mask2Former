@@ -18,12 +18,12 @@ class Mask2FormerFinetuner(pl.LightningModule):
         self.num_classes = len(id2label.keys())
         self.label2id = {v:k for k,v in self.id2label.items()}
         self.model = Mask2FormerForUniversalSegmentation.from_pretrained(
-            "facebook/mask2former-swin-small-ade-semantic",
+            "facebook/mask2former-swin-base-ade-semantic",
             id2label=self.id2label,
             label2id=self.label2id,
             ignore_mismatched_sizes=True,
         )
-        self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-small-ade-semantic")
+        self.processor = AutoImageProcessor.from_pretrained("facebook/mask2former-swin-base-ade-semantic")
         evaluate.load
         self.test_mean_iou = evaluate.load("mean_iou")
         
