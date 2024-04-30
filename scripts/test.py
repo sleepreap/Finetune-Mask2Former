@@ -28,7 +28,7 @@ if __name__=="__main__":
     args = parser.parse_args()
     model_path = args.model_path
     data_module = SegmentationDataModule(dataset_dir=DATASET_DIR, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
-    model=Mask2FormerFinetuner(model_path, id2label= ID2LABEL, lr=LEARNING_RATE)
+    model=Mask2FormerFinetuner.load_from_checkpoint(model_path, id2label= ID2LABEL, lr=LEARNING_RATE)
 
     trainer = pl.Trainer(
         logger=LOGGER,
