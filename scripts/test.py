@@ -11,8 +11,6 @@ from mask2former import ( Mask2FormerFinetuner,
                         LEARNING_RATE, 
                         LOGGER, 
                         PRECISION)
-
-import mask2former.config as config
 import argparse
 
 
