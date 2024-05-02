@@ -53,7 +53,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             class_labels=batch["class_labels"],
         )
         loss = outputs.loss
-        self.log("trainLoss", loss, sync_dist=True)
+        self.log("trainLoss", loss, sync_dist=True,  batch_size=config.BATCH_SIZE )
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -63,7 +63,7 @@ class Mask2FormerFinetuner(pl.LightningModule):
             class_labels=[labels for labels in batch["class_labels"]],
         )
         loss = outputs.loss
-        self.log("valLoss", loss, sync_dist=True)
+        self.log("valLoss", loss, sync_dist=True,  batch_size=config.BATCH_SIZE)
         return loss
         
     def test_step(self, batch, batch_idx):
