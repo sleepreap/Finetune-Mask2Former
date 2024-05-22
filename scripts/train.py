@@ -9,8 +9,7 @@ from mask2former import ( Mask2FormerFinetuner,
                         NUM_WORKERS, 
                         ID2LABEL, 
                         LEARNING_RATE, 
-                        LOGGER, 
-                        PRECISION, 
+                        LOGGER,  
                         DEVICES, 
                         EARLY_STOPPING_CALLBACK, 
                         CHECKPOINT_CALLBACK, 
@@ -23,7 +22,6 @@ if __name__=="__main__":
 
     trainer = pl.Trainer(
         logger=LOGGER,
-        precision=PRECISION,
         accelerator='cuda',
         devices=DEVICES,
         strategy="ddp",
