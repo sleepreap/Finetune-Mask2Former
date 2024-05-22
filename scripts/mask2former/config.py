@@ -30,7 +30,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 dataset_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'dataset')
 DATASET_DIR=dataset_path
 NUM_WORKERS=4
-BATCH_SIZE=1
+BATCH_SIZE=2
 ID2LABEL={
     0: 'Background',
     1: 'Metal Lines'
