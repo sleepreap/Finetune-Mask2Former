@@ -5,14 +5,14 @@ import sys
 import os
 
 #Training hyperparmeters
-LEARNING_RATE=0.0001
-EPOCHS=30
+LEARNING_RATE=0.001
+EPOCHS=180
 PRECISION="16-mixed"
-DEVICES=[1,2,3]
+DEVICES=[2,3]
 EARLY_STOPPING_CALLBACK = EarlyStopping(
     monitor="valLoss",
     min_delta=0.00,
-    patience=4,
+    patience=55,
     verbose=True,
     mode="min",
 )
@@ -22,6 +22,9 @@ CHECKPOINT_CALLBACK = ModelCheckpoint(save_top_k=1,
                                       save_on_train_epoch_end=True  # Ensure saving happens at the end of a training epoch
                                      )
 LOGGER = CSVLogger("outputs", name="lightning_logs_csv")
+#lr Scheduler
+FACTOR=0.1
+PATIENCE=30
 
 #Dataset
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
