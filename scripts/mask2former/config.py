@@ -1,5 +1,4 @@
 from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
-from pytorch_lightning.callbacks import EarlyStopping
 from pytorch_lightning.loggers import CSVLogger
 import sys
 import os
@@ -8,13 +7,6 @@ import os
 LEARNING_RATE=0.001
 EPOCHS=180
 DEVICES=[2,3]
-EARLY_STOPPING_CALLBACK = EarlyStopping(
-    monitor="valLoss",
-    min_delta=0.00,
-    patience=55,
-    verbose=True,
-    mode="min",
-)
 CHECKPOINT_CALLBACK = ModelCheckpoint(save_top_k=1, 
                                       monitor="valLoss", 
                                       every_n_epochs=1,  # Save the model at every epoch 
