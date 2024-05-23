@@ -6,6 +6,7 @@ import os
 #Training hyperparmeters
 LEARNING_RATE=0.001
 EPOCHS=180
+PRECISION='16-mixed"
 DEVICES=[2,3]
 CHECKPOINT_CALLBACK = ModelCheckpoint(save_top_k=1, 
                                       monitor="valLoss", 
