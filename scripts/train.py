@@ -10,8 +10,7 @@ from mask2former import ( Mask2FormerFinetuner,
                         ID2LABEL, 
                         LEARNING_RATE, 
                         LOGGER,  
-                        DEVICES, 
-                        EARLY_STOPPING_CALLBACK, 
+                        DEVICES,
                         CHECKPOINT_CALLBACK, 
                         EPOCHS )
 
@@ -25,7 +24,7 @@ if __name__=="__main__":
         accelerator='cuda',
         devices=DEVICES,
         strategy="ddp",
-        callbacks=[EARLY_STOPPING_CALLBACK, CHECKPOINT_CALLBACK],
+        callbacks=[CHECKPOINT_CALLBACK],
         max_epochs=EPOCHS
     )
     print("Training starts!!")
