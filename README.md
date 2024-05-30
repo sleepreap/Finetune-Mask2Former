@@ -39,27 +39,33 @@ e.g python test.py --model_path Mask2Former.ckpt
 ## Utilities
 This folder contains the following scripts:
 1. inference.py
-2. saveComparison.py
-3. predictionOverlay.py
-4. saveComparisonWithOverlay.py
+2. labelComparison.py
+3. imageComparison.py
+4. predictionOverlay.py
+5. saveComparisonWithOverlay.py
    
 ### All the scripts already reference the parent folder for the command line arguments. The images and labels used are from the test dataset respectively.
 
 Inference.py would save all the predictions by the model on the test dataset in the specified save path folder.
-
-
 
 ```bash
 1. 'cd scripts/utilities'
 2. run the inference.py file using this command: python inference.py --model_path MODEL_PATH --save_path SAVE_PATH
 ```
 
-saveComparison.py would save a plot of the prediction and the ground truth side by side in the specified save path folder. There is only 1 comparison per image due to memory constraint.
+labelComparison.py would save a plot of the prediction and the ground truth side by side in the specified save path folder. 
 
 ```bash
 1. 'cd scripts/utilities'
-2. run the saveComparison.py file using this command: python saveComparison.py --model_path MODEL_PATH --save_path SAVE_PATH
+2. run the labelComparison.py file using this command: python labelComparison.py --model_path MODEL_PATH --save_path SAVE_PATH
 ```
+imageComparison.py would save a plot of the prediction, an overlay of the label on the image, as well as the original image side by side in the specified save path folder. 
+
+```bash
+1. 'cd scripts/utilities'
+2. run the imageComparison.py file using this command: python imageComparison.py --model_path MODEL_PATH --save_path SAVE_PATH
+```
+
 predictionOverlay.py would save the overlay that shows the TP+TN+FP+FN of the predictions done by the model for all the images in the specified save path folder. Black means TN (background), Green means TP (metal-line), Red means FN (metal-line as background), Blue means FP (background as metal-line).
 
 ```bash
