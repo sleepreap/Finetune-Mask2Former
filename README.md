@@ -59,7 +59,7 @@ labelComparison.py would save a plot of the prediction and the ground truth side
 1. 'cd scripts/utilities'
 2. run the labelComparison.py file using this command: python labelComparison.py --model_path MODEL_PATH --save_path SAVE_PATH
 ```
-imageComparison.py would save a plot of the prediction, an overlay of the label on the image, as well as the original image side by side in the specified save path folder. 
+imageComparison.py would save a plot of the prediction, an overlay of the prediction on the image, as well as the original image side by side in the specified save path folder. 
 
 ```bash
 1. 'cd scripts/utilities'
