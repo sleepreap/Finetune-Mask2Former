@@ -54,7 +54,7 @@ def savePredictions(pred_set, label_set, image_set, save_path):
         image = (image * 255).astype(np.uint8)
         image = np.transpose(image, (1, 2, 0))  # Convert image from (C, H, W) to (H, W, C)
         colored_prediction = apply_palette(pred, palette)
-        color_seg = apply_palette(label, palette)
+        color_seg = apply_palette(pred, palette)
         
         # Create an overlay image by blending the original image with the colored segmentation mask
         overlay_image = (image * 0.5 + color_seg * 0.5).astype(np.uint8)
